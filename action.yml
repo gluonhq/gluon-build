@@ -1,0 +1,18 @@
+name: 'Gluon Build'
+description: 'Action to build a Gluon application.'
+inputs:
+  gluon-license:
+    description: 'Optional Gluon license'
+    required: false
+  target:
+    description: 'The target platform to build: desktop, ios, android'
+    required: true  
+runs:
+  using: "composite"
+  steps: 
+    - run: printf "${{ inputs.gluon-license }}" > src/main/resources/gluonmobile.license
+      shell: bash
+    - run: mvn -P${{ inputs.target }} client:build client:package
+      shell: bash
+      env:
+        GRAALVM_HOME: ${{ env.JAVA_HOME }}
